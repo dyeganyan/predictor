@@ -8,11 +8,13 @@ use Illuminate\Support\Facades\Log;
 class GeminiService
 {
     protected $apiKey;
-    protected $baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+    protected $baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models/';
+    protected $model;
 
     public function __construct()
     {
         $this->apiKey = config('services.gemini.key');
+        $this->model = config('services.gemini.model', 'gemini-1.5-flash');
     }
 
     public function generateContent($prompt, $images = [])
@@ -37,7 +39,9 @@ class GeminiService
             ];
         }
 
-        $response = Http::post("{$this->baseUrl}?key={$this->apiKey}", [
+        $url = "{$this->baseUrl}{$this->model}:generateContent?key={$this->apiKey}";
+
+        $response = Http::post($url, [
             'contents' => [
                 [
                     'parts' => $parts

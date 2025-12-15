@@ -1,0 +1,65 @@
+services:
+    app:
+        build:
+            context: .
+            args:
+                user: laravel
+                uid: 1000
+        image: novatix-app
+        container_name: novatix-app
+        restart: unless-stopped
+        working_dir: /var/www
+        volumes:
+            - ./:/var/www
+        environment:
+            DB_HOST: db
+            DB_CONNECTION: mysql
+            REDIS_HOST: redis
+            DB_USERNAME: ${DB_USERNAME:-novatix}
+            DB_PASSWORD: ${DB_PASSWORD:-secret}
+            DB_DATABASE: ${DB_DATABASE:-laravel}
+        networks:
+            - novatix
+
+    web:
+        image: nginx:alpine
+        container_name: novatix-nginx
+        restart: unless-stopped
+        ports:
+            - "${APP_PORT:-8000}:80"
+        volumes:
+            - ./:/var/www
+            - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+        networks:
+            - novatix
+
+    db:
+        image: mysql:8.0
+        container_name: novatix-db
+        restart: unless-stopped
+        environment:
+            MYSQL_DATABASE: ${DB_DATABASE:-laravel}
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-secret}
+            MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+            MYSQL_USER: ${DB_USERNAME:-novatix}
+            SERVICE_TAGS: dev
+            SERVICE_NAME: mysql
+        ports:
+            - "${FORWARD_DB_PORT:-3306}:3306"
+        volumes:
+            - ./docker/mysql/data:/var/lib/mysql
+        networks:
+            - novatix
+
+    redis:
+        image: redis:alpine
+        container_name: novatix-redis
+        restart: unless-stopped
+        ports:
+            - "${FORWARD_REDIS_PORT:-6379}:6379"
+        networks:
+            - novatix
+
+networks:
+    novatix:
+        driver: bridge

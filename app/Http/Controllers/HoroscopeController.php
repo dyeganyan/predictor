@@ -16,6 +16,31 @@ class HoroscopeController extends Controller
         $this->geminiService = $geminiService;
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/horoscope",
+     *     summary="Generate Horoscope",
+     *     tags={"Readings"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name","dob","time","location"},
+     *             @OA\Property(property="name", type="string"),
+     *             @OA\Property(property="dob", type="string", format="date"),
+     *             @OA\Property(property="time", type="string", example="14:30"),
+     *             @OA\Property(property="location", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful reading",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", type="object")
+     *         )
+     *     )
+     * )
+     */
     public function predict(Request $request)
     {
         $request->validate([

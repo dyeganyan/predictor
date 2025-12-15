@@ -17,6 +17,36 @@ class CoffeeController extends Controller
         $this->geminiService = $geminiService;
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/coffee",
+     *     summary="Read Coffee Cup",
+     *     tags={"Readings"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 required={"images[]"},
+     *                 @OA\Property(
+     *                     property="images[]",
+     *                     type="array",
+     *                     @OA\Items(type="string", format="binary"),
+     *                     description="Coffee cup images"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful reading",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", type="object")
+     *         )
+     *     )
+     * )
+     */
     public function predict(Request $request)
     {
         $request->validate([

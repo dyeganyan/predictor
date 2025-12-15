@@ -17,6 +17,36 @@ class PalmController extends Controller
         $this->geminiService = $geminiService;
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/palm",
+     *     summary="Analyze Palm",
+     *     tags={"Readings"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 required={"image"},
+     *                 @OA\Property(
+     *                     property="image",
+     *                     type="string",
+     *                     format="binary",
+     *                     description="Palm image file"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful reading",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", type="object")
+     *         )
+     *     )
+     * )
+     */
     public function predict(Request $request)
     {
         $request->validate([
