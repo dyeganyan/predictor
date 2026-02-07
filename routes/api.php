@@ -5,6 +5,7 @@ use App\Http\Controllers\HoroscopeController;
 use App\Http\Controllers\PalmController;
 use App\Http\Controllers\CoffeeController;
 use App\Http\Controllers\WalletController;
+use App\Http\Controllers\ReadingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/horoscope', [HoroscopeController::class, 'predict']);
     Route::post('/palm', [PalmController::class, 'predict']);
     Route::post('/coffee', [CoffeeController::class, 'predict']);
+    Route::get('/readings', [ReadingController::class, 'index']);
 
     // Wallet
     Route::get('/wallet/balance', [WalletController::class, 'getBalance']);

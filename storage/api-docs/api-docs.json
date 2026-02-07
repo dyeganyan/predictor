@@ -35,6 +35,19 @@
                                         "type": "string",
                                         "format": "password",
                                         "minLength": 8
+                                    },
+                                    "birth_date": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "birth_time": {
+                                        "type": "string"
+                                    },
+                                    "birth_location": {
+                                        "type": "string"
+                                    },
+                                    "gender": {
+                                        "type": "string"
                                     }
                                 },
                                 "type": "object"
@@ -227,17 +240,15 @@
                 "summary": "Generate Horoscope",
                 "operationId": "9f43054ed08d3acb18475d15865e93e6",
                 "requestBody": {
-                    "required": true,
+                    "required": false,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "name",
-                                    "dob",
-                                    "time",
-                                    "location"
-                                ],
                                 "properties": {
+                                    "period": {
+                                        "type": "string",
+                                        "example": "weekly"
+                                    },
                                     "name": {
                                         "type": "string"
                                     },
@@ -332,6 +343,97 @@
                     }
                 ]
             }
+        },
+        "/api/wallet/balance": {
+            "get": {
+                "tags": [
+                    "Wallet"
+                ],
+                "summary": "Get User Balance",
+                "operationId": "92c4ac501e2f3e2a629433e6f4748efc",
+                "responses": {
+                    "200": {
+                        "description": "Current Balance",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "balance": {
+                                            "type": "number",
+                                            "format": "float"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/wallet/deposit": {
+            "post": {
+                "tags": [
+                    "Wallet"
+                ],
+                "summary": "Add Funds",
+                "operationId": "506845afd12f94e48ec2a586dfb9ee86",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "amount"
+                                ],
+                                "properties": {
+                                    "amount": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 10
+                                    },
+                                    "payment_method_id": {
+                                        "description": "Stripe Payment Method ID",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Funds added",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "balance": {
+                                            "type": "number",
+                                            "format": "float"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -350,6 +452,10 @@
         {
             "name": "Readings",
             "description": "Readings"
+        },
+        {
+            "name": "Wallet",
+            "description": "Wallet"
         }
     ]
 }
